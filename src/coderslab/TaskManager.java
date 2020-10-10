@@ -8,19 +8,33 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class TaskManager {
 
-  static final String FILE_NAME = "tasks.csv";
+  static final String nazwaPliku = "tasks.csv";
   static final String[] menuGlowne = {"add", "remove", "list", "exit"};
   static String[][] tasks;
 
   public static void main(String[] args) {
 
     selectOption();
+  }
+
+  public static void saveFile(String[][] tabela2) {
+    Path path1 = Paths.get("tasks.csv");
+    String[] saved = new String[tasks.length];
+    for (int i = 0; i < tabela2.length; i++) {
+      saved[i] = String.join(", ", tabela2[i]);
+    }
+    try {
+      Files.write(path1, Arrays.asList(saved));
+    } catch (IOException ex) {
+      System.out.println("Nie można zapisać pliku.");
+    }
   }
 
   public static void removeTask(String[][] tabela, int index) {
@@ -67,7 +81,7 @@ public class TaskManager {
   }
 
   public static String[][] odczyt(String fileName) {
-    Path path = Paths.get(FILE_NAME);
+    Path path = Paths.get(nazwaPliku);
     if (!Files.exists(path)) {
       System.out.println("File not exist.");
       System.exit(0);
@@ -98,7 +112,7 @@ public class TaskManager {
   }
 
   public static void selectOption() {
-    tasks = odczyt(FILE_NAME);
+    tasks = odczyt(nazwaPliku);
     textMenu(menuGlowne);
     Scanner scan1 = new Scanner(System.in);
     while (scan1.hasNextLine()) {
@@ -111,6 +125,7 @@ public class TaskManager {
           removeTask(tasks, removeNumber());
           break;
         case "exit":
+          saveFile(tasks);
           System.out.println(ConsoleColors.RED);
           System.out.println("Bye, bye.");
           System.exit(0);
