@@ -133,7 +133,7 @@ public class TaskManager {
           addTask();
           break;
         default:
-          System.out.println("Please select a correct option");
+          System.out.println("Please select a correct option.");
       }
       textMenu(menuGlowne);
     }
